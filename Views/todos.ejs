@@ -1,0 +1,54 @@
+<src='/navigation/nav.js'>
+<%- include('includes/head.ejs') %>
+
+<body>
+    <%- include('includes/navigation.ejs') %>
+
+    <link rel="stylesheet" href="/css/task.css">
+    <link rel="stylesheet" href="/css/forms.css">
+    <main>
+        <hr>
+        <% if (prods.length > 0) { %>
+        <div class="grid">
+            <% for (let todo of prods) { %>
+
+            <article class="card todo-item">
+                <header class="card__header">
+                    <h1 class="todo__title">
+                        Task: <%= todo.title %></h1>
+                </header>
+                <div class="card__status">
+                    <h1 class="todo__status">
+                        Task status: <%= todo.status %></h1>
+                </div>
+                <div class="card__prior">
+                    <h1 class="todo__priority">
+                        Priority: <%= todo.priority %></h1>
+                </div>
+                <div class="card__due">
+                    <h1 class="todo__due">
+                        Due time: <%= todo.duetime %>
+                    </h1>
+                </div>
+
+                <div class="card__desc">
+                    <p class="todo__description">
+                        Task description: <%= todo.description %>
+                    </p>
+                </div>
+                <div class="card__actions">
+                    <a href="/admin/edit-todo/<%= todo.id %>?edit=true" class="btn">Edit Todo</a>
+
+                    <form action="/admin/task-completed" method="POST">
+                        <input type="hidden" value="<%= todo.id %>" name="completed" id="todoId">
+                        <a href="/admin/task-completed" class="btn" type="submit" id='submit'>Done</a>
+                    </form>
+                </div>
+            </article>
+            <% } %>
+        </div>
+        <% } else { %>
+        <h1>No Tasks Found!</h1>
+        <% } %>
+    </main>
+    <%- include('includes/end.ejs') %>

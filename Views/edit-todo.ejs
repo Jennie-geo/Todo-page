@@ -1,0 +1,39 @@
+<%- include('includes/head.ejs') %>
+
+<link rel="stylesheet" href="/css/forms.css">
+<link rel="stylesheet" href="/css/product.css">
+
+<body>
+  <%- include('includes/navigation.ejs') %>
+  <main>
+    <form class="signin-form" action="/admin/<% if (editing) { %>edit-todo<% } else { %>add-todo<% } %>" method="POST">
+      <div class="form-control label">
+           <label for="title">WHAT AM I TO DO TODAY?</label>
+           <input type="text" name="title" id="title" placeholder="write your todo" value="<% if (editing) { %><%= todo.title %><% } %>">
+      </div>
+      <div class="form-control label">
+           <label for="status">STATUS</label>
+           <input type="text" name="status" id="status" value="<% if (editing) { %><%= todo.status %><% } %>">
+      </div>
+      <div class="form-control label">
+           <label for="priority">PRIORITY</label>
+           <input type="text" name="priority" id="priority" value="<% if (editing) { %><%= todo.priority %><% } %>">
+      </div>
+      <div class="form-control label">
+           <label for="duetime">DUE TIME</label>
+        <input type="number" name="duetime" id="duetime" value="<% if (editing) { %><%= todo.duetime %><% } %>">
+      </div>
+      <div class="form-control label">
+           <label for="description">NOTES</label>
+           <textarea name="description" id="description" rows="5"><% if (editing) { %><%= todo.description %><% } %></textarea>
+      </div>
+      <% if (editing) { %>
+      <input type="hidden" value="<%= todo.id %>" name="todoId">
+      <% } %>
+
+      <button class="btn" type="submit"><% if (editing) { %>Update Todo<% } else { %>Add Todo<% } %></button>
+    </form>
+
+  </main>
+
+  <%- include('includes/end.ejs') %>

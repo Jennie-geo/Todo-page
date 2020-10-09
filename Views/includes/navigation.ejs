@@ -1,0 +1,22 @@
+<header class="main-header">
+    <nav class="main-header__nav">
+        <ul class="main-header__list-item">
+            <li class="main-header__items">
+                <a class="<%= path === '/admin/' ? 'active': '' %>" href="/admin/">ABOUT US</a></li>
+            <li class="main-header__items"><a class="<%= path === '/admin/contact-us' ? 'active': '' %>"
+                    href="/admin/contact-us">CONTACT US</a></li>
+            <li class="main-header__items"><a class="<%= path === '/admin/add-todo' ? 'active': '' %>"
+                    href="/admin/add-todo">ADD TODO</a> </li>
+            <li class="main-header__items"><a class="<%= path === '/admin/todos' ? 'active': '' %>" href="/admin/todos">TODOS</a>
+            </li>
+            <li class="main-header__items"><a class="<%= path === '/admin/task-completed' ? 'active': '' %>"
+                    href="/admin/task-completed">COMPLETED TODO</a></li>
+        </ul>
+        <ul class="main-header__list-item">
+            <li class="main-header__items"><a class="<%= path === '/login' ? 'active': '' %>" href="/login">Login</a>
+            </li>
+            <li class="main-header__items"><a class="<%= path === '/signup' ? 'active': '' %>" href="/signup">Sign Up</a></li>
+
+        </ul>
+    </nav>
+</header>
