@@ -3,29 +3,29 @@ const express = require('express')
 
 const adminController = require('../controllers/admin');
 
+const isAuth = require('../public/isAuthenticated/is-auth')
+
 const router = express.Router();
 
 router.get('/', adminController.getAboutUs);
 
 router.get('/contact-us', adminController.getContactUs);
 
-router.get('/add-todo', adminController.getAddTodo); 
+ router.get('/add-todo',isAuth, adminController.getAddTodo); 
 
-router.post('/add-todo', adminController.postAddTodo);
+ router.post('/add-todo', isAuth, adminController.postAddTodo);
 
-router.get('/todos', adminController.getTodos)
+router.get('/todos', isAuth, adminController.getTodos)
 
-router.get('/edit-todo/:todoId', adminController.getEditTodo);
+router.get('/edit-todo/:todoId', isAuth, adminController.getEditTodo);
 
-router.post('/edit-todo', adminController.postEditTodo);
+router.post('/edit-todo', isAuth, adminController.postEditTodo);
 
-router.get('/task-completed', adminController.getCompletedTodo)
+router.get('/completed-todo', isAuth, adminController.getCompleted)
 
-router.patch('/task-completed', adminController.patchCompleted);
+router.patch('/completed-todo/:todoId', isAuth, adminController.patchCompleted);
 
-//router.post('/task-completed/:todoId', adminController.postMarkCompleted);
-
-//router.post('/delete-product', adminController.postDeleteTodo);
+router.post('/delete-todo', isAuth, adminController.postDeleteTodo);
 
 module.exports = router;
 

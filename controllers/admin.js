@@ -1,24 +1,30 @@
 const Todo = require('../models/todo');
 
+const User = require('../models/user');
+
 exports.getContactUs = (req, res, next) => {
   res.render('contact-us', {
     pageTitle: "Contact Us",
     path: "/admin/contact-us",
+    isAuthenticated: req.session.isLoggedIn
   });
 };
 
-exports.getAboutUs = (req, res, next) => {
-  res.render('about', {
-    pageTitle: "About Us",
-    path: "/admin/",
+ exports.getAboutUs = (req, res, next) => {
+   res.render('about', {
+     pageTitle: "About Us",
+     path: "/admin/",
+     isAuthenticated: req.session.isLoggedIn
   })
-};
+ };
 
 exports.getAddTodo = (req, res, next) => {
+
   res.render('edit-todo', {
     pageTitle: 'Add Todo',
     path: '/admin/add-todo',
-    editing: false
+    editing: false,
+    isAuthenticated: req.session.isLoggedIn
 
   })
 
@@ -27,13 +33,13 @@ exports.postAddTodo = (req, res, next) => {
   const dailyTask = req.body.title;
   const status = req.body.status;
   const priority = req.body.priority;
-  const dueTime = req.body.duetime;
+  const startTime = req.body.startTime;
   const description = req.body.description;
   const myTodo = new Todo({
     title: dailyTask,
     status: status,
     priority: priority,
-    duetime: dueTime,
+    duetime: startTime,
     description: description
   });
   myTodo.save({ completed: false })
@@ -52,6 +58,7 @@ exports.getTodos = (req, res, next) => {
       prods: todos,
       pageTitle: "All Todos",
       path: "/admin/todos",
+      isAuthenticated: req.session.isLoggedIn
     });
   })
     .catch(err => {
@@ -73,7 +80,8 @@ exports.getEditTodo = (req, res, next) => {
       pageTitle: 'Edit Todo',
       path: '/edit-todo',
       editing: editMode, //if it's in edit mode
-      todo: todo
+      todo: todo,
+      isAuthenticated: req.session.isLoggedIn
     })
   }).catch(err => {
     console.log(err)
@@ -86,7 +94,7 @@ exports.postEditTodo = (req, res, next) => {
   const updatedDailyTask = req.body.title;
   const updatedStatus = req.body.status;
   const updatedPriority = req.body.priority;
-  const updatedDuetime = req.body.duetime;
+  const updatedDuetime = req.body.startTime;
   const updatedDesc = req.body.description;
   Todo.findByPk(todoId).then(todo => {
     todo.title = updatedDailyTask;
@@ -106,52 +114,51 @@ exports.postEditTodo = (req, res, next) => {
 
 }
 
-//marking all incomplete tasks as complete
-exports.patchCompleted = (req, res) => {
-  const todoId = req.params.todoId;
-  Todo.findByPk(todoId).then(task => {
-    task.status = true
-//retrieving a status of the id and change it to true then save the data  
-  return task.save()
-})
-  .then(result => {
-    console.log("status updated");
-    res.redirect('/about')
-  })
-  .catch(err => {console.log(err)
-  })
-
+// marking all incomplete tasks as complete
+exports.patchCompleted = (req, res, next) => {
+  // const todoId = req.body.todoId;
+  // const changeStatus = req.body.status
+  // Todo.findByPk(todoId).getTodos().then(todos => {
+  //   console.log(todos)
+  //   todos.status = changeStatus
+  //   //return req.todos.status = true;
+  //       todos.status.save({ status:true});
+  // })
+  // .then(result => {
+  //   return req.Todos.clearTodos();
+  // })
+  // .then(()=> {
+  //     res.redirect('/admin/completed')
+  //   })
+  // .catch(err => {
+  //   console.log(err)
+  // })
 }
 
-   exports.getCompletedTodo = (req, res, next) => {
-     const todoId = req.body.todoId;
-      Todo.findByPk(todoId).then(task => {
-        if(!task) {
-          res.redirect('/about')
-        }
-      
-        })
-         res.render("completed-todo", {
-          pageTitle: 'Completed Task',
-          items: task,
-          path: 'admin/task-completed'
-        }).then(result => {
-          console.log('Todo Completed')
-          return res.redirect('/admin/task-completed')
-        }).catch(err => {
-          console.log(err)
-        }).catch(err => console.log(err))
-   }
+  exports.getCompleted = (req, res, next) => {
+    Todo.findAll({where: {status: true}}).then(todos => {
+      res.render("completed-todo", {
+        pageTitle: 'Completed Task',
+        path: '/admin/completed-todo',
+        items: todos,
+        isAuthenticated: req.session.isLoggedIn
+      })
+    }).catch(err => {
+      console.log(err)
+    })
+     
+       }
 
-  //  exports.postDeleteTodo = (req, res, next) => {
-  //   const todoId = req.body.todoId;
-  //   Todo.find({ where: {id = todoId}}).then(todo => {
-  //     return todo.destroy()
-  //   }).then(todo => {
-  //     console.log('TODO DELETED');
-  //     res.redirect('/admin/todos');
-  //   })
-  //   .catch(err => {
-  //     console.log(err)
-  //   })
-  // }
+   exports.postDeleteTodo = (req, res, next) => {
+    const todoId = req.body.todoId;
+    Todo.findByPk(todoId).then(todos => {
+      return todos.destroy()
+    }).then(result => {
+      console.log('TODO DELETED');
+      res.redirect('/admin/completed-todo');
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
+

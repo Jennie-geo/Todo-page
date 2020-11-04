@@ -9,14 +9,22 @@ const User = sequelize.define('user', {
         allowNull: false,
         primaryKey: true
     },
-    name: {
+    firstName: {
         type: Sequelize.STRING    
     },
+    lastName: {
+        type: Sequelize.STRING
+    },
+    resetToken: String,
+    resetTokenExpiration: Date,
+
     email: {
         type: Sequelize.STRING
+    },
+    password: {
+        type: Sequelize.STRING,
+        require: true
     }
 })
 
 module.exports = User;
-
-//after creating User model, we will create an association in app.js.
